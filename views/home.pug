@@ -1,0 +1,37 @@
+extends layout
+
+block content
+
+  .container
+    h1 #{title}
+    br
+    hr
+    form(role='form', method='POST', action='/books/scout')
+      .form-group
+        label(for='Genre') Genre
+          select#Genre.form-control(name='genre', placeholder='genre')
+            option(selected='') select a genre
+            option horror
+            option fiction
+            option romance
+        button.btn.btn-primary(type='submit')
+          | Scout!
+    hr
+    br
+    .panel.panel-primary.panel-transparent
+      .panel-heading
+        h1.panel-title Recommended for you:
+      .panel-body
+        .row
+          each book, i in books
+            .col-sm-6.col-md-3
+              .thumbnail
+                a(href="/books/"+book._id)
+                  img.img-rounded(src=book.image_url, alt='No Preview available', style='width:300px;height:350px;')
+              .caption
+                h3 #{book.title}
+                p
+                  a(href="/books/"+book._id, role='button')
+                    button.btn.btn-primary View
+                  a(href="/books/downloads/"+book.fname, role='button')
+                    button.btn.btn-default Download

@@ -1,0 +1,72 @@
+extends layout
+
+block content
+  a.btn.btn-primary(href='/books/home') Go Back
+  br
+  .panel.panel-primary.panel-transparent
+    .panel-heading
+      h1.panel-title #{book.title}
+    .panel-body
+      .row
+        .col-md-4
+          img.img-rounded(src=book.image_url, style='width:300px;height:400px;')
+        .col-md-8
+          ul.list-group
+            li.list-group-item
+              b Genre: #{book.genre}
+            li.list-group-item
+              b Author: #{book.author}
+            li.list-group-item
+              b Uploader: #{uploader}
+            li.list-group-item
+              b Description: #{book.body}
+          a.btn.btn-primary(href='/books/downloads/'+book.fname) DOWNLOAD
+          hr
+          if user
+            if user.id == book.uploader
+              a.btn.btn-default(href='/books/edit/'+book._id) Edit
+              a.btn.btn-danger.delete-book(href='#', data-id=book._id) Delete
+              hr
+
+  .panel.panel-primary.panel-transparent
+    .panel-heading
+      h1.panel-title Leave your comments
+    .panel-body
+      .row
+        #logout.col-sm-11.col-sm-offset-0
+          .comment-tabs
+            ul.nav.nav-tabs(role='tablist')
+              li.active
+                a(href='#comments-logout', role='tab', data-toggle='tab')
+                  h1.panel-title Reviews
+              li
+                a(href='#add-comment', role='tab', data-toggle='tab')
+                  h1.panel-title Add review
+            .tab-content
+              #comments-logout.tab-pane.active
+                if reviews
+                  each review, i in reviews
+                    ul.media-list
+                      li.media
+                        a.pull-left(href='#')
+                          img.media-object.img-circle(src='https://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif', alt='profile')
+                        .media-body
+                          .well.well-lg
+                            h1.panel-title #{review.userid}
+                            br
+                            p.media-comment
+                              | #{review.review}
+                else
+                  h1.panel-title  No reviews were found
+
+              #add-comment.tab-pane
+                form#commentForm.form-horizontal(action='/books/review/'+book._id, method='post', role='form')
+                  .form-group
+                    label.col-sm-2.control-label(for='email') Comment
+                    .col-sm-10
+                      textarea#addComment.form-control(name='review', rows='5')
+                  .form-group
+                    .col-sm-offset-2.col-sm-10
+                      button#submitComment.btn.btn-success.btn-circle.text-uppercase(type='submit')
+                        span.glyphicon.glyphicon-send
+                        |  Summit Post

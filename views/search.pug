@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 #{title}
+  br
+  if books
+    ul.list-group
+      each book in books
+        li.list-group-item
+          a(href="/books/"+book._id)
+            img(src=book.image_url, style= 'width:50px;height:50px;') 
+          a(href="/books/"+book._id)= book.title 

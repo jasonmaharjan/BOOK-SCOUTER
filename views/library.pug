@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1
+    center #{title}
+  br
+  br
+  br
+  .container
+    .panel.panel-primary.panel-transparent
+      .panel-heading
+        h1.panel-title Available Books
+      .panel-body
+        .row
+          each book, i in books
+            .col-sm-6.col-md-3
+              .thumbnail
+                a(href="/books/"+book._id)
+                  img.img-rounded(src=book.image_url, alt='No Preview available', style='width:300px;height:350px;')
+              .caption
+                h3 #{book.title}
+                p
+                  a(href="/books/"+book._id, role='button')
+                    button.btn.btn-primary View
+                  a(href="/books/downloads/"+book.fname, role='button')
+                    button.btn.btn-default Download

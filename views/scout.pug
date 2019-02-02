@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  if books
+    .container
+      .panel.panel-primary.panel-transparent
+        .panel-heading
+          h1.panel-title #{title}
+          br
+          h2.panel-title
+            strong.text-danger N
+            |  results were found for the search for
+            strong.text-danger >> #{searchedTerm}
+        .panel-body
+          section.col-xs-12.col-sm-6.col-md-12
+            each book, i in books
+              article.search-result.row
+                .col-xs-12.col-sm-12.col-md-3
+                  a.thumbnail(href="/books/"+book._id)
+                    img(src=book.image_url, alt='No Preview available')
+                .col-xs-12.col-sm-12.col-md-2
+                  ul.meta-search
+                    li
+                      i.glyphicon.glyphicon-tags
+                      span Genre: #{book.genre}
+                    li
+                      i.glyphicon.glyphicon-pencil
+                      span Author: #{book.author}
+                    li
+                      .col-xs-12.col-md-8
+                      .col-xs-12.col-md-4
+                      a(href="/books/"+book._id, role='button')
+                        button.btn.btn-primary View
+                .col-xs-12.col-sm-12.col-md-7.excerpet
+                  h3
+                    a(href="/books/"+book._id) #{book.title}
+                  p(align='justify')  #{book.body}
+                span.clearfix.borda
+          a.btn.btn-primary(href='/books/home') Go Back

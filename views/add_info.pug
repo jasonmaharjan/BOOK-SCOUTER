@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1 Click on the files to add their information
+  br
+  h2 Recently uploaded file is at the bottom of the list, please select to continue!
+  br
+  ul.list-group
+    each file, i in files
+      li.list-group-item
+        a.btn.btn-default(href='/books/add/'+ file.filename)= file.filename

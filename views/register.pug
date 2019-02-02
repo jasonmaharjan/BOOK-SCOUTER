@@ -1,0 +1,43 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-md-5.col-md-offset-3
+        .panel.panel-default
+          .panel-heading
+            span.glyphicon.glyphicon-lock
+            |  Register
+          .panel-body
+            form.form-horizontal(role='form', method='POST', action='/users/register')
+              .form-group
+                label.col-sm-3.control-label(for='Name')
+                  | Name
+                .col-sm-7
+                  input#Name.form-control(type='text', name='name', placeholder='Name', required='')
+              .form-group
+                label.col-sm-3.control-label(for='Username')
+                  | Username
+                .col-sm-7
+                  input#Username.form-control(type='text', name='username', placeholder='Username', required='')
+              .form-group
+                label.col-sm-3.control-label(for='Email')
+                  | Email
+                .col-sm-7
+                  input#Email.form-control(type='text', name='email', placeholder='Email', required='')
+              .form-group
+                label.col-sm-3.control-label(for='Password')
+                  | Password
+                .col-sm-7
+                  input#Password.form-control(type='password', name='password', placeholder='Password', required='')
+              .form-group
+                label.col-sm-3.control-label(for='ConfirmPassword')
+                  | Confirm
+                .col-sm-7
+                  input#ConfirmPassword.form-control(type='password', name='password2', placeholder='Confirm', required='')
+              .form-group.last
+                .col-sm-offset-3.col-sm-9
+                  button.btn.btn-success.btn-sm(type='submit')
+                    | Register
+                  button.btn.btn-default.btn-sm(type='reset')
+                    | Reset
