@@ -18,24 +18,16 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  comments:{
-    type: String,
-    required: false
-  },
-  // genrecount: [{
-  horror:{
-    type: Number,
-    default: 0
-  },
-  romance:{
-    type: Number,
-    default: 0
-  },
-  fiction:{
-    type: Number,
-    default: 0
-  }
-//}]
+  recommender: [{
+    genre:{
+       type: String,
+       lowercase: true
+    },
+    count:{
+      type: Number,
+      default: 0
+    }
+  }]
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);

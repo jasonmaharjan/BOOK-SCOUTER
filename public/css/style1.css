@@ -152,13 +152,13 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
 /*parallax*/
 .header {
-  /*  background-image: url("https://picstatio.com/download/1920x1080/9fl1cf/minimal-art-wallpaper.jpg");
+    background-image: url("/image_src/bg6.jpg");
     background-position: center top;
     background-repeat: no-repeat;
     background-size: cover;
-    background-attachment: fixed;*/
+    background-attachment: fixed;
     padding-top: 100px;
-    padding-bottom: 300px;
+    padding-bottom: 150px;
 }
 
 li {
@@ -185,7 +185,7 @@ footer {
     height: 50px;
     bottom: 0;
     width: 100%;
-    background: #343a40;
+    background:#000000;
     color: #6c757d;
     padding-left: 50px;
     padding-top: 20px;
@@ -197,9 +197,9 @@ footer {
 }
 
 .panel-transparent .panel-heading{
-    background: rgba(122, 130, 136, 0.85)!important;
+    background: rgba(140, 69, 19, 0.85)!important;
 }
 
 .panel-transparent .panel-body{
-    background: rgba(46, 51, 56, 0.15)!important;
+    background: rgba(245, 255, 250, 0.65)!important;
 }

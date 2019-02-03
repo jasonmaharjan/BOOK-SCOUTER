@@ -7,7 +7,7 @@
     "start": "node app",
     "dev": "nodemon app.js"
   },
-  "author": "Jason",
+  "author": "Jason Maharjan",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

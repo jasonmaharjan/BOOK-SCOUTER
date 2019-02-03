@@ -3,7 +3,7 @@ html
   head
     title Book Scouter
     link(rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.css')
-    link(rel='stylesheet' href='/css/style.css')
+    link(rel='stylesheet' href='/css/font_style.css')
   body
     nav.navbar.navbar-inverse
       .container
@@ -44,10 +44,12 @@ html
               li
                 a(href='/users/login') Login
     .container
-      h1 #{title}
+      h1 
+        center #{title}
       form(method='POST' enctype='multipart/form-data' action='/books/uploads')
         #form-group
-          label Choose File:
+          label
+            h2 Choose File:
           input.form-control(name='file', id='file', type='file')
         br
         input.btn.btn-primary(type='submit', value='Submit')
@@ -63,8 +65,3 @@ html
     script(src='/bower_components/jquery/dist/jquery.js')
     script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
     script(src='/js/main.js')
-
-
-      
-  
-  

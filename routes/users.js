@@ -50,7 +50,7 @@ router.post('/register', function(req, res){
           res.render('register');
         }
         else if (username || email){
-          req.flash('danger', 'Email is already taken. Try a different one');
+          req.flash('danger', 'Email and Username is already taken. Try a different one');
           res.render('register');
         }
         else{
@@ -60,6 +60,14 @@ router.post('/register', function(req, res){
           newUser.email = req.body.email;
           newUser.username = req.body.username;
           newUser.password = req.body.password;
+
+          //newUser.recommender[0].genre = "horror";
+          newUser.recommender[0] = {genre: "horror"};
+          newUser.recommender[1] = {genre: "non fiction"};
+          newUser.recommender[2] = {genre: "romance"};
+          newUser.recommender[3] = {genre: "fantasy"};
+          newUser.recommender[4] = {genre: "comedy"};
+          newUser.recommender[5] = {genre: "course materials"};
 
           // Generate salt and hash for password encryption
           bcrypt.genSalt(10, function(err, salt){

@@ -1,0 +1,26 @@
+/* Font properties*/
+p{
+  font-family:"Comic Sans MS", cursive, sans-serif;
+}
+h1{
+  font-family:"Comic Sans MS", cursive, sans-serif;
+  font-size: 50px;
+  color: #000000;
+}
+h2{
+  font-size: 20px;
+  font-family:"Comic Sans MS", cursive, sans-serif;
+  color: #000000;
+}
+
+/*footer*/
+footer {
+    position: fixed;
+    height: 50px;
+    bottom: 0;
+    width: 200%;
+    background:#000000;
+    color: #6c757d;
+    padding-left: 50px;
+    padding-top: 20px;
+}

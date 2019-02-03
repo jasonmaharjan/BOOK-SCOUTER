@@ -17,6 +17,10 @@ let User = require('../models/user');
 
 // Review Model
 let Review = require('../models/review');
+
+// Uploaded file's name model
+let Upload = require('../models/uploads');
+
 // Mongo URI
 const mongoURI = 'mongodb://localhost:27017/BOOKSCOUTER';
 
@@ -44,6 +48,17 @@ const storage = new GridFsStorage({
   url: mongoURI,
   file: (req, file) => {
     return new Promise((resolve, reject) => {
+
+      // Store the uploaded file's original filename
+      let upload = new Upload;
+      upload.name = file.originalname;
+      upload.save(function(err){
+        if(err){
+          console.log(err);
+        }
+      })
+
+      // Generate random 32 character for unique filename
       crypto.randomBytes(16, (err, buf) => {
         if (err) {
           return reject(err);
@@ -62,43 +77,57 @@ const upload = multer({ storage });
 
 //////////////////////////////////////////////////////////////////////
 
-//Homepage (Index page)
+// Homepage (Index page)
 app.get('/home', ensureAuthenticated, function(req, res){
 
-  var g;
-  if(req.user.horror > req.user.romance && req.user.horror > req.user.fiction){
-    g = "horror";
-  }else if (req.user.fiction > req.user.romance && req.user.fiction > req.user.horror) {
-    g = "fiction";
-  }else if(req.user.romance > req.user.horror && req.user.romance > req.user.fiction){
-    g = "romance";
-  }else {
-    g = null;
-  }
+  User.findById(req.user._id, function(err, user) {
+        var a;
+        var b;
+        for (var i = 0; i < 3; i++)
+        {
+            for (var j = i + 1; j < 3; j++)
+            {
+                if (user.recommender[i].count < user.recommender[j].count)
+                {
+                    a = user.recommender[i].genre;
+                    user.recommender[i].genre = user.recommender[j].genre;
+                    user.recommender[j].genre = a;
 
-  Book.find({genre: g}, function(err, books){
-    if(err){
-      console.log(err);
-    }
-    else {
-      if (!books || books.length === 0) {
-        Book.find({}, function(err, book){
-          if(err){
-            console.log(err);
-          }else{
-            res.render('home', {
-              title:'BOOKSCOUTER',
-              books: book
-            });
-         }
-        });
-      }else{
-        res.render('home', {
-          title:'BOOKSCOUTER',
-          books: books
-        });
+                    b = user.recommender[i].count;
+                    user.recommender[i].count = user.recommender[j].count;
+                    user.recommender[j].count = b;
+
+                    user.save();
+
+
+                }
+            }
+        }
+
+    Book.find({genre: user.recommender[0].genre}, function(err, books){
+      if(err){
+        console.log(err);
       }
-   }
+      else {
+        if (!books || books.length === 0) {
+          Book.find({}, function(err, book){
+            if(err){
+              console.log(err);
+            }else{
+              res.render('home', {
+                title:'BOOKSCOUTER',
+                books: book
+              });
+           }
+          });
+        }else{
+          res.render('home', {
+            title:'BOOKSCOUTER',
+            books: books
+          });
+        }
+     }
+    });
   });
 });
 
@@ -145,8 +174,6 @@ app.post('/comments/:id', ensureAuthenticated, function(req, res){
     User.findById(book.uploader, function(err, user){
       user.comment = req.body.body;
 
-      console.log(user.comment);
-
       user.save(function(err){
         if(err){
           console.log(err);
@@ -189,29 +216,11 @@ app.post('/scout',ensureAuthenticated, function(req, res){
         }
       }
 
-      if(req.body.genre === 'horror'){
-        User.findOneAndUpdate({_id:req.user._id}, { $inc: { horror: 1 } }, function(err){
-          if(err){
-            console.log(err);
-          }
-        });
-      }
-
-      if(req.body.genre === 'romance'){
-        User.findOneAndUpdate({_id:req.user._id}, { $inc: { romance: 1 } }, function(err){
-          if(err){
-            console.log(err);
-          }
-        });
-      }
-
-      if(req.body.genre === 'fiction'){
-        User.findOneAndUpdate({_id:req.user._id}, { $inc: { fiction: 1 } }, function(err){
-          if(err){
-            console.log(err);
-          }
-        });
-      }
+      User.findOneAndUpdate({_id:req.user._id, "recommender": {$elemMatch: {genre: req.body.genre}}}, { $inc: { "recommender.$.count": 1 } }, function(err){
+        if(err){
+          console.log(err);
+        }
+      });
     });
   });
 });
@@ -238,9 +247,12 @@ app.get('/add_info',ensureAuthenticated, function(req, res){
      });
    }
    else {
+     Upload.find({}, function(err, results){
       res.render('add_info', {
-       files: files
+       files: files,
+       results: results
      });
+   });
    }
  });
 });
@@ -289,7 +301,7 @@ app.post('/add/:filename', function(req, res){
         }
 
         req.flash('success', 'Book Added!');
-        res.redirect('/books/home');
+        res.redirect('/books/library');
       });
     });
   }
@@ -328,7 +340,7 @@ app.post('/edit/:id', function(req, res){
     }
     else {
       req.flash('success', 'Book Updated');
-      res.redirect('/');
+      res.redirect('/books/home');
     }
   });
 });
@@ -365,6 +377,13 @@ app.delete('/:id', function(req, res){
         }
         res.send('Success');
       });
+
+      //Delete reviews of corresponding books
+      Review.remove(query, function(err){
+        if(err){
+          console.log(err);
+        }
+      });
     }
   });
 });
@@ -373,7 +392,7 @@ app.delete('/:id', function(req, res){
 app.get('/:id',ensureAuthenticated, function(req, res){
   Book.findById(req.params.id, function(err, book){
     User.findById(book.uploader, function(err, user){
-      Review.find({}, function(err, reviews) {
+      Review.find({bookid:req.params.id}, function(err, reviews) {
         var reviewMap = {};
 
         reviews.forEach(function(review){
@@ -444,9 +463,7 @@ app.post('/review/:id', function(req, res){
       });
     });
   }
-
 });
-
 
 // Access Control
 function ensureAuthenticated(req, res, next){

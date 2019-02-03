@@ -3,20 +3,25 @@ extends layout
 block content
 
   .container
-    h1 #{title}
+    h1
+      b
+      center #{title}
     br
     hr
     form(role='form', method='POST', action='/books/scout')
       .form-group
-        label(for='Genre') Genre
+        label(for='Genre')
+          p Genre
           select#Genre.form-control(name='genre', placeholder='genre')
             option(selected='') select a genre
             option horror
-            option fiction
+            option non fiction
             option romance
+            option comedy
+            option fantasy
+            option course materials
         button.btn.btn-primary(type='submit')
           | Scout!
-    hr
     br
     .panel.panel-primary.panel-transparent
       .panel-heading
