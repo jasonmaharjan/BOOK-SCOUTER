@@ -204,13 +204,15 @@ app.post('/scout',ensureAuthenticated, function(req, res){
             res.render('scout', {
               title: 'Search Results',
               searchedTerm: req.body.genre,
-              books: results
+              books: results,
+              matchCount: results.length
             });
           }else if(req.body.title) {
             res.render('scout', {
               title: 'Search Results',
               searchedTerm: req.body.title,
-              books: results
+              books: results,
+              matchCount: results.length
             });
           }
         }
